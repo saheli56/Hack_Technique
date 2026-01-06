@@ -1,0 +1,22 @@
+node_modules
+dist
+dist-ssr
+.vite
+
+# VCS
+.git
+.gitignore
+
+# Logs
+*.log
+
+# Local env (keep secrets out of image context)
+.env
+.env.*
+
+# Editor
+.vscode
+.idea
+
+# OS
+.DS_Store
