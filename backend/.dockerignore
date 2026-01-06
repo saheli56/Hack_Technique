@@ -1,0 +1,9 @@
+node_modules
+*.log
+
+# Local env (keep secrets out of image context)
+.env
+
+# VCS
+.git
+.gitignore
