@@ -1,0 +1,16 @@
+{
+  "name": "Shramik Mitra",
+  "short_name": "Shramik Mitra",
+  "description": "Empowering migrant workers with job opportunities, community support, and financial services",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
