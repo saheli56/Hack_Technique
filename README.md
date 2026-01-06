@@ -1,73 +1,122 @@
-# React + TypeScript + Vite
+# ShramikMitra
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ShramikMitra is a bilingual (Hindi/English) web app for migrant workers, featuring job listings, community/help pages, and a phone-style IVR experience (Twilio) with a judge-friendly in-browser IVR simulator.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Frontend: React + TypeScript + Vite + Tailwind + shadcn/ui
+- Backend: Node.js + Express + MongoDB (MongoDB Atlas)
+- IVR: Twilio webhooks (TwiML) + ngrok
 
-## React Compiler
+## Prerequisites
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Node.js 18+ and npm
+- MongoDB Atlas connection string (required for backend)
+- Optional: Twilio account + ngrok (for real phone calls)
+- Optional: Docker + Docker Compose (for one-command run)
 
-## Expanding the ESLint configuration
+## Environment Variables
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Backend (`backend/.env`)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Required:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+MONGODB_URI=mongodb+srv://<user>:<pass>@<cluster>/<db>?retryWrites=true&w=majority
+PORT=3001
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Optional (only if you want real Twilio IVR calls):
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```env
+TWILIO_ACCOUNT_SID=ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_AUTH_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+TWILIO_PHONE_NUMBER=+1XXXXXXXXXX
 ```
+
+### Frontend (repo root `.env`)
+
+Recommended for chatbot:
+
+```env
+VITE_GEMINI_API_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+If you run ngrok via Docker (see below):
+
+```env
+NGROK_AUTHTOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+## Run Locally (3 terminals) — Recommended
+
+Install dependencies (first time only):
+
+```bash
+cd /home/Masum/Videos/shramik-mitra
+npm install
+cd backend && npm install && cd ..
+```
+
+Terminal 1 (backend):
+
+```bash
+cd /home/Masum/Videos/shramik-mitra/backend
+npm start
+```
+
+Terminal 2 (frontend):
+
+```bash
+cd /home/Masum/Videos/shramik-mitra
+npm run dev
+```
+
+Terminal 3 (ngrok for real Twilio calls):
+
+```bash
+ngrok http 3001
+```
+
+Open:
+
+- Frontend: http://localhost:5173/
+- IVR Simulator: http://localhost:5173/ivr-simulator
+
+## Run with Docker (frontend + backend + ngrok)
+
+This starts everything with one command.
+
+```bash
+cd /home/Masum/Videos/shramik-mitra
+docker compose up --build
+```
+
+Open:
+
+- Frontend: http://localhost:5173/
+- IVR Simulator: http://localhost:5173/ivr-simulator
+- ngrok inspector: http://localhost:4040/
+
+Stop:
+
+```bash
+docker compose down
+```
+
+## Twilio IVR Setup
+
+See IVR setup details in `IVR_SETUP_GUIDE.md`.
+
+For a no-phone, judge-friendly demo, use the IVR simulator page:
+
+- `http://localhost:5173/ivr-simulator`
+
+## Useful Scripts
+
+From repo root:
+
+- `npm run dev` — Frontend
+- `npm run server` — Backend
+- `npm run demo` — Frontend + backend together (uses `concurrently`)
+- `npm run build` — Production build
